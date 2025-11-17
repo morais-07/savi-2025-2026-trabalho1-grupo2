@@ -1,9 +1,6 @@
 import open3d as o3d
-# import cv2 as cv
 import scipy
 import numpy as np
-import matplotlib
-import argparse
 from copy import deepcopy
 from scipy.optimize import least_squares
 from pathlib import Path
@@ -32,7 +29,7 @@ def erro_residuals(vetor, source_pts, target_pts, target_normals): #definição 
 
     return residuals
 
-def icp(source,target, init_transf, max_iterations=500, tolerance=1e7, max_correspondence_dist=0.1, visualize=False):
+def icp(source,target, init_transf, max_iterations=500, tolerance=1e-7, max_correspondence_dist=0.1, visualize=False):
     print(f"A iniciar ICP personalizado. Iterações={max_iterations}, Tolerância={tolerance}")
 
     Transformation = deepcopy(init_transf) #matriz de transformação que se vai atualizando, começa como uma cópia da inicial

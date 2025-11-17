@@ -38,18 +38,25 @@ def main():
     pcd1.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
     pcd2.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
     
+    print(f"Nuvem 1 (Original): {len(pcd1.points)} pontos.")
+    print(f"Nuvem 2 (Original): {len(pcd2.points)} pontos.")
+
     #Pré-processamento das Point Clouds
 
     #1- downsampling- reduz a densidade das nuvens, acelera o processo
     #A smaller voxel size will result in more points being retained and more detail being preserved, but 
     #will increase the computational costs and memory requirements
-    
+    print("\nA aplicar Voxel Downsampling...")
     voxel_size = 0.05 #0.25 m = 25 cm
     pcd1_ds = pcd1.voxel_down_sample(voxel_size)
     pcd2_ds = pcd2.voxel_down_sample(voxel_size)
+
+    print(f"\nNuvem 1 (Processada): {len(pcd1_ds.points)} pontos.")
+    print(f"Nuvem 2 (Processada): {len(pcd2_ds.points)} pontos.")
     
     #2- Estimação de normais
     #é feita uma KD-Tree de todos os pontos, apanha todos o nº de vizinhos máx dentro do raio r
+    print("\nA estimar normais...")
     r = voxel_size * 2.5
     m = 50
     pcd1_ds.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(
@@ -60,6 +67,7 @@ def main():
     #orientação consistente das normais
     pcd1_ds.orient_normals_consistent_tangent_plane(50)
     pcd2_ds.orient_normals_consistent_tangent_plane(50)
+    print("\nNormais estimadas com sucesso.")
 
     #Visualização da point cloud
 
@@ -68,7 +76,9 @@ def main():
     pcd2_ds.paint_uniform_color([0, 0, 1])
 
     entities = [pcd1_ds, pcd2_ds, axes_mesh]
+    print("\nA abrir visualizador.")
     o3d.visualization.draw_geometries(entities)
+
 
 if __name__== '__main__':
     main() 

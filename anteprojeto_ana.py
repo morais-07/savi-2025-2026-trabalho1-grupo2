@@ -1,5 +1,4 @@
 import open3d as o3d
-import cv2 as cv
 import scipy
 import numpy as np
 import matplotlib

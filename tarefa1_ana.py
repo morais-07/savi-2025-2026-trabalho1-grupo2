@@ -23,6 +23,10 @@ def main():
     rgb2 = o3d.io.read_image(str(filename_rgb2))
     depth2 = o3d.io.read_image(str(filename_depth2))
 
+    # Create the rgbd image
+    rgbd1 = o3d.geometry.RGBDImage.create_from_tum_format(rgb1, depth1)
+    rgbd2= o3d.geometry.RGBDImage.create_from_tum_format(rgb2, depth2)
+    
     #Gerar as Point Clouds 
     pcd1 = o3d.geometry.PointCloud.create_from_rgbd_image(
         rgbd1, o3d.camera.PinholeCameraIntrinsic(

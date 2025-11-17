@@ -42,7 +42,6 @@ def icp(source,target, init_transf, max_iterations=500, tolerance=1e7, max_corre
     target_pts_np = np.asarray(target.points)
     target_normals_np = np.asarray(target.normals)#Converter as normais da target pc para array
 
-# <--- (NOVO) Bloco de setup da visualização ---
     vis = None
     source_vis = None
     if visualize:
@@ -55,8 +54,6 @@ def icp(source,target, init_transf, max_iterations=500, tolerance=1e7, max_corre
         # Adicionar as geometrias à janela
         vis.add_geometry(source_vis) # Geometria que vamos animar
         vis.add_geometry(target)     # Geometria estática (alvo)
-    # --- Fim do bloco novo ---
-
 
     prev_error = 9999999999 #valor grande inicial
 
@@ -108,17 +105,14 @@ def icp(source,target, init_transf, max_iterations=500, tolerance=1e7, max_corre
 
         print(f"Iter {i+1:02d}: MSE = {current_error:.8f}, N. Corresp. = {len(source_idx)}")
 
-# <--- (NOVO) Bloco de atualização da visualização ---
         if visualize:
-            # Aplicamos a transformação INCREMENTAL à geometria
-            # que está a ser mostrada na janela
+            # Aplicamos a transformação INCREMENTAL à geometria que está a ser mostrada na janela
             source_vis.transform(T_inc)
             
             vis.update_geometry(source_vis) # Diz ao Open3D que a geometria mudou
-            vis.poll_events()               # Processa eventos (ex: fechar janela)
+            vis.poll_events()               # Processa eventos 
             vis.update_renderer()           # Redesenha o ecrã
-            time.sleep(0.2) # <--- Pausa de 100ms para ser visível
-        # --- Fim do bloco novo ---
+            time.sleep(0.2) # <--- Pausa de x segundos
         
         if np.abs(prev_error - current_error) < tolerance or current_error < tolerance:
             print( "Convergência atingida.")

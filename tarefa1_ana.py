@@ -1,10 +1,8 @@
 import open3d as o3d
-import cv2 as cv
-import scipy
 import numpy as np
-import matplotlib
-import argparse
+from pathlib import Path
 import copy
+
 
 #Processamento de dados comum a todas as tarefas
 

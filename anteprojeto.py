@@ -1,8 +1,6 @@
 import open3d as o3d
-import scipy
 import numpy as np
-import matplotlib
-import argparse
+from pathlib import Path
 
 #Processamento de dados comum a todas as tarefas
 

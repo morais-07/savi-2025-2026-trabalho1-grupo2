@@ -7,20 +7,21 @@ import argparse
 #Processamento de dados comum a todas as tarefas
 
 def main():
-
     #Carregamento de imagens e filtragem de profundidade
     #imagem 1
-    filename_rgb1 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/rgb/1.png'
-    rgb1 = o3d.io.read_image(filename_rgb1)
+    script_dir = Path(__file__).parent.resolve()
+    # Define o 'base_path' como sendo a pasta 'tum_dataset'
+    base_path = script_dir / 'tum_dataset'
 
-    filename_depth1 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/depth/1.png'
-    depth1 = o3d.io.read_image(filename_depth1)
-    #imagem 2
-    filename_rgb2 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/rgb/2.png'
-    rgb2 = o3d.io.read_image(filename_rgb2)
+    filename_rgb1 = base_path / 'rgb' / '1.png'
+    filename_depth1 = base_path / 'depth' / '1.png'
+    filename_rgb2 = base_path / 'rgb' / '2.png'
+    filename_depth2 = base_path / 'depth' / '2.png'
 
-    filename_depth2 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/depth/2.png'
-    depth2 = o3d.io.read_image(filename_depth2)
+    rgb1 = o3d.io.read_image(str(filename_rgb1))
+    depth1 = o3d.io.read_image(str(filename_depth1))
+    rgb2 = o3d.io.read_image(str(filename_rgb2))
+    depth2 = o3d.io.read_image(str(filename_depth2))
 
     # Create the rgbd image
     rgbd1 = o3d.geometry.RGBDImage.create_from_tum_format(rgb1, depth1)

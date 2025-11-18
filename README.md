@@ -174,7 +174,7 @@ The optimizer successfully finds a tighter-fitting sphere than a simple "centroi
 
 | Final Result: Aligned Clouds + Minimum Sphere |
 | :---: |
-| ![Minimum Enclosing Sphere](jdwbguivdfsbfrbvorsv) |
+| <img width="652" height="498" alt="esfera" src="https://github.com/user-attachments/assets/986f57d7-f2ab-4a79-908e-2441cba76266"> |
 | Resultado final mostrando as nuvens alinhadas (Vermelho/Azul) e a esfera mínima (Verde Transparente). |
 
 **Terminal Output (Metrics):**

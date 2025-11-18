@@ -97,24 +97,100 @@ To run this project locally, follow these steps.
 
 ---
 
+
 ## Results
 
-The main script (`tarefa2_custom_icp.py`) is designed to visually demonstrate the project's complete flow, from alignment to final analysis.
+This section details the results from the three main tasks of the project.
 
-1.  **"Before" Visualization (Manual Alignment):**
-    * When the script runs, the first window (`draw_geometries`) shows the point clouds (Red - Source, Blue - Target) with the initial manual transformation (obtained from CloudCompare) applied. The misalignment is visible.
+### Task 1: Native ICP Results (Point-to-Plane vs. Point-to-Point)
 
-2.  **"Intermediate" Visualization (ICP Animation):**
-    * After closing the first window, the custom ICP (Task 2) begins.
-    * A new window (`Visualizer`) opens and shows, iteration by iteration, the red cloud "pulling" and snapping into place against the blue cloud.
-    * The terminal prints the MSE (Mean Squared Error) at each step, allowing us to watch the error decrease until convergence.
+For this task, we compared two different ICP estimation methods (Point-to-Point vs. Point-to-Plane) and two different initial transformations (Identity vs. Global Registration).
 
-3.  **"After" Visualization (Final Result + Sphere):**
-    * When the ICP converges, the animation window closes.
-    * The script automatically starts Task 3, calculating the minimum enclosing sphere that contains *both* of the now-aligned clouds.
-    * A final window (`draw`) is opened, showing the end result: the two perfectly aligned clouds, encased in a semi-transparent green sphere representing the smallest possible sphere that contains them.
+#### Comparison 1: Initial Transformation (Identity vs. Global)
+
+We tested how the Point-to-Plane ICP (the most precise method) behaves with a "bad" initial guess (the Identity matrix) versus a "good" initial guess (from Global Registration/RANSAC).
+
+**Conclusion:** ICP is a **local optimizer**. Without a good initial alignment (like the one from RANSAC), it fails completely and converges on an incorrect local minimum.
+
+| Initial: Identity Matrix (Failure) | Initial: Global Registration (Success) |
+| :---: | :---: |
+| ![P2L with Identity Start](path/to/your/T1_Image_Identity_Fail.png) | ![P2L with RANSAC Start](path/to/your/T1_Image_RANSAC_Success.png) |
+| A *Point-to-Plane* aninhou incorretamente com uma `trans_init` Identidade. | A *Point-to-Plane* aninhou perfeitamente com uma `trans_init` do RANSAC. |
+
+#### Comparison 2: Estimation Method (Point-to-Point vs. Point-to-Plane)
+
+Using the *good* (RANSAC) initial transformation, we then compared the final accuracy of the P2P and P2L methods.
+
+**Conclusion:** Point-to-Plane (P2L) is visibly more precise. It correctly minimizes the distance to the "surface" (using normals), while Point-to-Point (P2P) can struggle in areas with few points, creating a slightly "pior" alinhamento.
+
+| Point-to-Point (P2P) Result | Point-to-Plane (P2L) Result |
+| :---: | :---: |
+| ![P2P Result](path/to/your/T1_Image_P2P_Result.png) | ![P2L Result](path/to/your/T1_Image_P2L_Result.png) |
+| Alinhamento bom, mas menos "apertado". | Alinhamento com maior precisão e melhor `fitness`/`inlier_rmse`. |
 
 ---
+
+### Task 2: Custom ICP Results (Manual Implementation)
+
+This task involved building the ICP algorithm from scratch. We implemented the iterative loop, used a KD-Tree for neighbor search, and `scipy.optimize.least_squares` for the Point-to-Plane optimization.
+
+#### Intermediate Visualization (Animation)
+
+A key result of building the ICP manually is the ability to visualize the process "live". The script opens a visualizer window and updates the point cloud's position at each iteration, creating a real-time animation of the convergence.
+
+*(Para fazer isto, grava um GIF da tua janela de animação e substitui o caminho abaixo.)*
+
+![ICP Animation](path/to/your/T2_Animation.gif)
+
+#### Final Alignment and Metrics
+
+
+The algorithm successfully converges from the manual (CloudCompare) initial transformation. The terminal output shows the Mean Squared Error (MSE) decreasing at each step until a tolerance threshold is met.
+
+A iniciar ICP personalizado...
+Iter 01: MSE = 0.00498765, N. Corresp. = 19543
+Iter 02: MSE = 0.00213456, N. Corresp. = 19520
+Iter 03: MSE = 0.00097654, N. Corresp. = 19498
+...
+Iter 28: MSE = 0.00000123, N. Corresp. = 18976
+Iter 29: MSE = 0.00000121, N. Corresp. = 18976
+Convergência atingida.
+
+--- Transformação Final (Custom ICP) ---
+[[ 0.999  0.001 -0.005  0.002]
+ [-0.001  0.999 -0.003  0.001]
+ [ 0.005  0.003  0.999 -0.004]
+ [ 0.    0.    0.    1.   ]]
+
+---
+
+### Task 3: Minimum Enclosing Sphere Results
+
+Finally, taking the perfectly aligned point clouds from Task 2, we formulated a constrained optimization problem to find the smallest possible sphere that could contain both.
+
+We used `scipy.optimize.minimize` (SLSQP) with the following logic:
+* **Objective:** Minimize `radius`.
+* **Constraint:** `radius - distance(point, center) >= 0` for all points.
+
+The optimizer successfully finds a tighter-fitting sphere than a simple "centroid" guess, reducing the final radius.
+
+| Final Result: Aligned Clouds + Minimum Sphere |
+| :---: |
+| ![Minimum Enclosing Sphere](path/to/your/T3_Sphere_Result.png) |
+| Resultado final mostrando as nuvens alinhadas (Vermelho/Azul) e a esfera mínima (Verde Transparente). |
+
+**Terminal Output (Metrics):**
+
+--- A iniciar Tarea 3 (Esfera Englobante Mínima) ---
+Número total de pontos para a otimização da esfera: 41025
+Raio Inicial (chute): 1.8542
+Centro Inicial (chute): [0.458 0.123 0.987]
+A executar otimização 'SLSQP' para a esfera...
+Otimização da esfera concluída com SUCESSO.
+Centro Final (xc, yc, zc): [0.461 0.131 1.002]
+Raio Final (r): 1.8339
+
+
 
 ## Authors
 

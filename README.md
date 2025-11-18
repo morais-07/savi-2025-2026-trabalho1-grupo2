@@ -118,5 +118,5 @@ The main script (`tarefa2_custom_icp.py`) is designed to visually demonstrate th
 
 ## Authors
 
-* **Ana [YOUR_LAST_NAME_HERE]** - (@Your-Github-User)
-* **Rafael Morais** - (@Your-Github-User)
+* **Ana Correia** - (@anacorreia14)
+* **Rafael Morais** - (@morais-07)

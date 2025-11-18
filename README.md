@@ -114,7 +114,7 @@ We tested how the Point-to-Plane ICP (the most precise method) behaves with a "b
 
 | Initial: Identity Matrix (Failure) | Initial: Global Registration (Success) |
 | :---: | :---: |
-| ![P2L with Identity Start](path/to/your/T1_Image_Identity_Fail.png) | ![P2L with RANSAC Start](path/to/your/T1_Image_RANSAC_Success.png) |
+| <img src="https://github.com/user-attachments/assets/36277a27-6469-4893-9a25-38a03a4b28c8" alt="T1_Img1_P2L_Identity_FAIL" width="800" height="600"> | <img src="https://github.com/user-attachments/assets/43a43d90-ec1c-47c5-b803-d4042f2996bd" alt="T1_Img2_RANSAC_Initial" width="800" height="600"> |
 | A *Point-to-Plane* aninhou incorretamente com uma `trans_init` Identidade. | A *Point-to-Plane* aninhou perfeitamente com uma `trans_init` do RANSAC. |
 
 #### Comparison 2: Estimation Method (Point-to-Point vs. Point-to-Plane)
@@ -125,7 +125,7 @@ Using the *good* (RANSAC) initial transformation, we then compared the final acc
 
 | Point-to-Point (P2P) Result | Point-to-Plane (P2L) Result |
 | :---: | :---: |
-| ![P2P Result](path/to/your/T1_Image_P2P_Result.png) | ![P2L Result](path/to/your/T1_Image_P2L_Result.png) |
+| <img src="https://github.com/user-attachments/assets/8d0f1114-d4cd-4c10-8d55-8884a873fad8" alt="T1_Img3_P2P_RANSAC_Final" width="800" height="600"> | <img src="https://github.com/user-attachments/assets/09a9fc6b-7e9d-4d11-a324-71755b2b59ca" alt="T1_Img4_P2L_RANSAC_Final" width="800" height="600"> |
 | Alinhamento bom, mas menos "apertado". | Alinhamento com maior precisão e melhor `fitness`/`inlier_rmse`. |
 
 ---
@@ -138,9 +138,7 @@ This task involved building the ICP algorithm from scratch. We implemented the i
 
 A key result of building the ICP manually is the ability to visualize the process "live". The script opens a visualizer window and updates the point cloud's position at each iteration, creating a real-time animation of the convergence.
 
-*(Para fazer isto, grava um GIF da tua janela de animação e substitui o caminho abaixo.)*
-
-![ICP Animation](path/to/your/T2_Animation.gif)
+![ICP Animation](https://github.com/user-attachments/assets/3320cf5a-4b19-4511-9e01-8d7143436492)
 
 #### Final Alignment and Metrics
 
@@ -176,7 +174,7 @@ The optimizer successfully finds a tighter-fitting sphere than a simple "centroi
 
 | Final Result: Aligned Clouds + Minimum Sphere |
 | :---: |
-| ![Minimum Enclosing Sphere](path/to/your/T3_Sphere_Result.png) |
+| ![Minimum Enclosing Sphere](jdwbguivdfsbfrbvorsv) |
 | Resultado final mostrando as nuvens alinhadas (Vermelho/Azul) e a esfera mínima (Verde Transparente). |
 
 **Terminal Output (Metrics):**
@@ -194,5 +192,5 @@ Raio Final (r): 1.8339
 
 ## Authors
 
-* **Ana Correia** - [@anacorreia14](https://github.com/anacorreia14)
+* **Ana Correia** - [@anacorreia1](https://github.com/anacorreia1)
 * **Rafael Morais** - [@morais-07](https://github.com/morais-07)

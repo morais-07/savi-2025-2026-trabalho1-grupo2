@@ -102,11 +102,13 @@ To run this project locally, follow these steps.
 
 This script processes two RGB-D images using OPen3D to generate, clean, and visualize 3D point clouds. It performs the essential preprocessing steps commonly used in 3D reconstruction.
 
-<u>Loading RGB and Depth Images:.</u>
+*Loading RGB and Depth Images:*
+
 The script first locates the tum_dataset folder and loads two pairs of images, rgb/1.png + depth/1.png and rgb/2.png + depth/2.png.
 Open3D reads them and creates RGBDImage objects that combine color and depth information.
 
-<u>Creating Point Clouds:.</u>
+*Creating Point Clouds:*
+
 Using the RGB-D images, the script generates two 3D point clouds:
 ```bash
 pcd1 = o3d.geometry.PointCloud.create_from_rgbd_image(
@@ -121,19 +123,24 @@ o3d.camera.PinholeCameraIntrinsicParameters.PrimeSenseDefault))
 
 The point clouds are then “flipped” to correct their orientation from camera coordinates to the standard 3D coordinate system.
 
-<u>Downsampling.</u>
+*Downsampling*
+
 To reduce the number of points and speed up later processing, voxel downsampling is applied:
 ```bash
 voxel_size = 0.05 (5 cm)
 ```
 The script prints the number of points before and after downsampling.
 
-<u>Normal Estimation.</u>
+*Normal Estimation*
+
 Normals are computed for each point using hybrid KD-Tree search.
+
 Normals are then oriented consistently so they all point in a similar direction—important for registration or meshing.
 
-<u>Visualisation.</u>
+*Visualisation*
+
 We make sure that the point clouds are in different colors and a coordinate frame is added so orientation is clear.
+
 All objects are displayed using Open3D’s 3D visualizer:
 ```bash
 entities = [pcd1_ds, pcd2_ds, axes_mesh]
@@ -142,8 +149,11 @@ o3d.visualization.draw_geometries(entities)
 * **main_icp_gr.py and main_icp_id.py**
 
 This script loads RGB-D images, generates point clouds, preprocesses them, and then performs 3D registration using two stages:
+
 -Global alignment with RANSAC (based on FPFH features) or  first guess with identity matrix
+
 -Local refinement with ICP (Point-to-Plane or Point-to-Point)
+
 Finally, the script visualizes the alignment results.
 
 First the script makes the pre processing common to all tasks.
@@ -171,9 +181,12 @@ This matrix is used as the starting point for the ICP process (even though no al
 *ICP Refinement:*
 
 Using the transformation found by RANSAC (or the initial identity matrix), the script runs:
+
 -Point-to-Plane ICP
+
 This method aligns the point clouds more precisely by using point normals.
 -Point-to-Point ICP
+
 This method aligns the point clouds by using the distance between points.
 Both of these produce the final refined transformation matrix.
 
@@ -192,6 +205,7 @@ The main steps in the script are:
 *Initial Transformation:*
 
 A manual initial transformation matrix `T_manual` is used to align the two point clouds roughly.
+
 This initial transformation is applied to the source point cloud `source_initial`, and the result is visualized.
 
 *ICP Algorithm:*
@@ -199,9 +213,13 @@ This initial transformation is applied to the source point cloud `source_initial
 The custom ICP algorithm `icp function` iteratively refines the alignment using a Point-to-Plane error metric.
 
 The algorithm: 
+
 -Uses KD-Tree search to find the nearest neighbors between source and target points.
+
 -Minimizes the error using least squares optimization to find the best transformation.
+
 -Updates the transformation iteratively and applies it to the source point cloud.
+
 -The process continues until convergence or the maximum number of iterations is reached.
 
 *Visualiaing Results:*
@@ -211,20 +229,31 @@ After the ICP process, the final aligned source point cloud is visualized along 
 The Key functions in the script are:
 
 `matrix(vetor)`:
+
 -Converts a vector of 6 parameters (3 rotation angles and 3 translation values) into a 4x4 transformation matrix.
+
 -The rotation matrix is computed using Euler angles and applied to the 3x3 upper-left part of the 4x4 matrix, with the translation placed in the last column.
 
 `erro_residuals(vetor, source_pts, target_pts, target_normals)`:
+
 -Computes the residuals (errors) between the transformed source points and the target points.
+
 -The error is calculated as the dot product of the difference between source and target points, and the normals of the target points, yielding the Point-to-Plane error.
 
 `icp(source, target, init_transf, ...)`:
+
 -Implements the custom ICP algorithm.
+
 -Iteratively refines the alignment between the source and target point clouds.
+
 For each iteration:
+
 -Transforms the source points.
+
 -Finds the nearest neighbors between source and target.
+
 -Optimizes the transformation using least squares to minimize the error.
+
 -If visualize=True, the progress of the ICP process is visualized in a window.
 
 Key Parameters in icp() function:
@@ -240,11 +269,13 @@ Key Parameters in icp() function:
 Visualizing and Testing ICP:
 
 -Initial Alignment Visualization: The `source_initial` is transformed by the initial manual transformation `T_manual`, and the result is displayed alongside the target.
+
 -Final ICP Alignment: After running the ICP algorithm, the final transformation is applied, and the aligned point clouds are visualized.
 
 Explanation of the ICP Process:
 
 -Transformation Updates: The transformation (rotation + translation) is applied to the source point cloud after each ICP iteration.
+
 -Convergence: The process stops either when the error converges (the change in error is below the set tolerance) or when the maximum number of iterations is reached.
 
 ---

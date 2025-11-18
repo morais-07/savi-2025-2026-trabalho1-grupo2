@@ -71,8 +71,6 @@ To run this project locally, follow these steps.
     git clone https://github.com/morais-07/savi-2025-2026-trabalho1-grupo2.git
     cd [REPO-FOLDER-NAME]
     ```
-ts\activate
-    ```
 
 2.  **Install Dependencies**
 

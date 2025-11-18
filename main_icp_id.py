@@ -2,28 +2,29 @@ import open3d as o3d
 import cv2 as cv
 import scipy
 import numpy as np
-import matplotlib
-import argparse
 import copy
+from pathlib import Path
 
 def main():
-    # Carregamento de imagens e filtragem de profundidade
-    # imagem 1
-    filename_rgb1 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/rgb/1.png'
-    rgb1 = o3d.io.read_image(filename_rgb1)
-    filename_depth1 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/depth/1.png'
-    depth1 = o3d.io.read_image(filename_depth1)
-    # imagem 2
-    filename_rgb2 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/rgb/2.png'
-    rgb2 = o3d.io.read_image(filename_rgb2)
-    filename_depth2 = '/home/anacorreia/Desktop/SAVI_2025/savi-2025-2026-trabalho1-grupo2/tum_dataset/depth/2.png'
-    depth2 = o3d.io.read_image(filename_depth2)
+    #Carregamento de imagens e filtragem de profundidade
+    #imagem 1
+    script_dir = Path(__file__).parent.resolve()
+    # Define o 'base_path' como sendo a pasta 'tum_dataset'
+    base_path = script_dir / 'tum_dataset'
+
+    filename_rgb1 = base_path / 'rgb' / '1.png'
+    filename_depth1 = base_path / 'depth' / '1.png'
+    filename_rgb2 = base_path / 'rgb' / '2.png'
+    filename_depth2 = base_path / 'depth' / '2.png'
+
+    rgb1 = o3d.io.read_image(str(filename_rgb1))
+    depth1 = o3d.io.read_image(str(filename_depth1))
+    rgb2 = o3d.io.read_image(str(filename_rgb2))
+    depth2 = o3d.io.read_image(str(filename_depth2))
 
     # Create the rgbd image
     rgbd1 = o3d.geometry.RGBDImage.create_from_tum_format(rgb1, depth1)
-    print(rgbd1)
-    rgbd2 = o3d.geometry.RGBDImage.create_from_tum_format(rgb2, depth2)
-    print(rgbd2)
+    rgbd2= o3d.geometry.RGBDImage.create_from_tum_format(rgb2, depth2)
 
     # Gerar as Point Clouds
     pcd1 = o3d.geometry.PointCloud.create_from_rgbd_image(
@@ -59,19 +60,18 @@ def main():
     def draw_registration_result(source, target, transformation):
         source_temp = copy.deepcopy(source)
         target_temp = copy.deepcopy(target)
-        source_temp.paint_uniform_color([1, 0.706, 0])
-        target_temp.paint_uniform_color([0, 0.651, 0.929])
+        
+        source_temp.paint_uniform_color([1, 0, 0]) # Vermelho
+        target_temp.paint_uniform_color([0, 0, 1]) # Azul
+        
         source_temp.transform(transformation)
-        o3d.visualization.draw_geometries([source_temp, target_temp],
-                                          zoom=0.4459,
-                                          front=[0.9288, -0.2951, -0.2242],
-                                          lookat=[1.6784, 2.0612, 1.4451],
-                                          up=[-0.3402, -0.9189, -0.1996])
+        axes_mesh = o3d.geometry.TriangleMesh().create_coordinate_frame(size=0.5)
+        o3d.visualization.draw_geometries([source_temp, target_temp, axes_mesh])
 
     # Definir source e target
     source = pcd1_ds
     target = pcd2_ds
-    threshold = 0.02
+    threshold = 0.05 # distância máxima para correspondência de pontos
 
     # Matriz inicial de identidade (substitui o global registration)
     trans_init = np.identity(4)

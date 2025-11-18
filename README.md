@@ -278,6 +278,49 @@ Explanation of the ICP Process:
 
 -Convergence: The process stops either when the error converges (the change in error is below the set tolerance) or when the maximum number of iterations is reached.
 
+* **main_minimum_enclosing_sphere.py**
+
+This section performs the optimization of a minimum enclosing sphere around two aligned point clouds `source_final` and `target`
+
+*Point Cloud Combination:*
+
+The aligned point clouds are merged into a single array `all_points_np`, combining both the transformed source and target clouds.
+
+This allows all points to be used for sphere optimization.
+
+*Initial Guess for Sphere Parameters:*
+
+An initial guess for the sphere’s center and radius is computed:
+
+The center is set as the mean of all points.
+
+The radius is set as the maximum distance from the center to any point in the combined set.
+
+This serves as the initial parameters for the optimization.
+
+*Sphere Optimization:*
+
+The optimization problem minimizes the radius of the sphere while ensuring it encompasses all points.
+
+The Scipy `minimize` function with the SLSQP method is used to solve this, subject to constraints and bounds:
+
+Constraints ensure the radius is positive, while the center has no specific limits.
+
+*Final Results:*
+
+After optimization, the optimized sphere parameters (center and radius) are extracted.
+
+A sphere is generated using the optimized radius and translated to the optimized center.
+
+*Visualization:*
+
+The optimized sphere is displayed alongside the aligned point clouds, showing the final result.
+
+*Success/Failure:*
+
+If optimization succeeds, the final sphere is visualized. Otherwise, an error message is displayed.
+
+
 ---
 
 

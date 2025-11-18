@@ -96,6 +96,50 @@ To run this project locally, follow these steps.
     ```
 
 ---
+## Code Explanation
+
+* **anteprojeto.py**
+
+This script processes two RGB-D images using OPen3D to generate, clean, and visualize 3D point clouds. It performs the essential preprocessing steps commonly used in 3D reconstruction.
+
+<u>Loading RGB and Depth Images:.</u>
+The script first locates the tum_dataset folder and loads two pairs of images, rgb/1.png + depth/1.png and rgb/2.png + depth/2.png.
+Open3D reads them and creates RGBDImage objects that combine color and depth information.
+
+<u>Creating Point Clouds:.</u>
+Using the RGB-D images, the script generates two 3D point clouds:
+```bash
+pcd1 = o3d.geometry.PointCloud.create_from_rgbd_image(
+rgbd1, o3d.camera.PinholeCameraIntrinsic(
+o3d.camera.PinholeCameraIntrinsicParameters.PrimeSenseDefault))
+```
+```bash
+pcd2 = o3d.geometry.PointCloud.create_from_rgbd_image(
+rgbd2, o3d.camera.PinholeCameraIntrinsic(
+o3d.camera.PinholeCameraIntrinsicParameters.PrimeSenseDefault))
+```
+
+The point clouds are then “flipped” to correct their orientation from camera coordinates to the standard 3D coordinate system.
+
+<u>Downsampling.</u>
+To reduce the number of points and speed up later processing, voxel downsampling is applied:
+```bash
+voxel_size = 0.05 (5 cm)
+```
+The script prints the number of points before and after downsampling.
+
+<u>Normal Estimation.</u>
+Normals are computed for each point using hybrid KD-Tree search.
+Normals are then oriented consistently so they all point in a similar direction—important for registration or meshing.
+
+<u>Visualisation.</u>
+We make sure that the point clouds are in different colors and a coordinate frame is added so orientation is clear.
+All objects are displayed using Open3D’s 3D visualizer:
+```bash
+entities = [pcd1_ds, pcd2_ds, axes_mesh]
+o3d.visualization.draw_geometries(entities)
+```
+---
 
 
 ## Results
